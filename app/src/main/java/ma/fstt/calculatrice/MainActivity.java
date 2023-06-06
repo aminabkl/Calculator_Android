@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -20,12 +21,13 @@ import java.util.Stack;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView resultTv, solutionTv;
-    MaterialButton buttonBrackOpen, buttonBrackClose;
+    MaterialButton buttonBrackOpen, buttonBrackClose, buttonHistory;
     MaterialButton buttonDivide, buttonMultiply, buttonMinus, buttonPlus, buttonEquals;
     MaterialButton button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
     MaterialButton buttonAC, buttonC, buttonDot;
 
     Stack<Character> bracketStack;
+    List<String> historyList;
 
 
     @Override
@@ -36,8 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         solutionTv = findViewById(R.id.solution_tv);
 
         bracketStack = new Stack<>();
+        historyList = new ArrayList<>();
 
 
+        assignId(buttonHistory, R.id.button_history);
         assignId(buttonBrackOpen, R.id.button_open_bracket);
         assignId(buttonBrackClose, R.id.button_close_bracket);
         assignId(buttonDivide, R.id.button_divide);
@@ -72,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MaterialButton button = (MaterialButton) view;
         String buttonText = button.getText().toString();
         String dataToCalculate = solutionTv.getText().toString();
+
+        if (buttonText.equals("H")) {
+            openHistoryActivity();
+            return;
+        }
 
         if (buttonText.equals("AC")) {
             solutionTv.setText("");
@@ -132,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Context context = Context.enter();
             context.setOptimizationLevel(-1);
             Scriptable scriptable = context.initSafeStandardObjects();
+            historyList.add(data);
             String finalResult = context.evaluateString(scriptable, data, "Javascript", 1, null).toString();
             if (finalResult.endsWith(".0")) {
                 finalResult = finalResult.replace(".0", "");
@@ -142,4 +152,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return "ERR";
         }
     }
+
+    void openHistoryActivity() {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        intent.putStringArrayListExtra("historyList", new ArrayList<>(historyList));
+        startActivity(intent);
+    }
+
 }
