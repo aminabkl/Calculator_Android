@@ -1,5 +1,6 @@
 package ma.fstt.calculatrice;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String operation = historyList.get(position);
         holder.operationTextView.setText(operation);
+        Log.d("HistoryAdapter", "Operation: " + operation);
+
     }
 
     @Override

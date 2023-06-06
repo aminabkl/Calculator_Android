@@ -1,6 +1,7 @@
 package ma.fstt.calculatrice;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,5 +26,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         HistoryAdapter adapter = new HistoryAdapter(historyList);
         recyclerView.setAdapter(adapter);
+        Log.d("HistoryActivity", "History List: " + historyList.toString());
+
     }
 }
