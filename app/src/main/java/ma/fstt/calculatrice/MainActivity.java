@@ -15,6 +15,7 @@ import org.mozilla.javascript.Scriptable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,7 +25,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MaterialButton button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
     MaterialButton buttonAC, buttonDot;
 
-    boolean isBracketOpen = false;
+    //    boolean isBracketOpen = false;
+    Stack<Character> bracketStack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         resultTv = findViewById(R.id.result_tv);
         solutionTv = findViewById(R.id.solution_tv);
+
+        bracketStack = new Stack<>();
 
 
         assignId(buttonBrackOpen, R.id.button_open_bracket);
@@ -71,15 +76,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (buttonText.equals("AC")) {
             solutionTv.setText("");
             resultTv.setText("0");
-            isBracketOpen = false;
+            bracketStack.clear();
+//            isBracketOpen = false;
             return;
         }
 
+//        if (buttonText.equals("=")) {
+//            if (isBracketOpen) {
+//                solutionTv.setText("ERR: Missing closing bracket");
+//                return;
+//            }
+//            String finalResult = getResult(dataToCalculate);
+//            if (!finalResult.equals("ERR")) {
+//                solutionTv.setText(finalResult);
+//                resultTv.setText(finalResult);
+//            } else {
+//                solutionTv.setText("ERR");
+//            }
+//            return;
+//        }
+//        if (buttonText.equals("(")) {
+//            dataToCalculate += buttonText;
+//            isBracketOpen = true;
+//        } else if (buttonText.equals(")")) {
+//            if (isBracketOpen) {
+//                dataToCalculate += buttonText;
+//                isBracketOpen = false;
+//            } else {
+//                solutionTv.setText("ERR");
+//                return;
+//            }
+//        } else {
+//            dataToCalculate += buttonText;
+//        }
+
+
         if (buttonText.equals("=")) {
-            if (isBracketOpen) {
+            if (!bracketStack.isEmpty()) {
                 solutionTv.setText("ERR: Missing closing bracket");
                 return;
             }
+
             String finalResult = getResult(dataToCalculate);
             if (!finalResult.equals("ERR")) {
                 solutionTv.setText(finalResult);
@@ -90,31 +127,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        if (buttonText.equals("C")) {
-//            dataToCalculate = dataToCalculate.substring(0, dataToCalculate.length() - 1);
-            resultTv.setText("0");
-        }
-
-
-
         if (buttonText.equals("(")) {
             dataToCalculate += buttonText;
-            isBracketOpen = true;
+            bracketStack.push('(');
         } else if (buttonText.equals(")")) {
-            if (isBracketOpen) {
+            if (!bracketStack.isEmpty() && bracketStack.peek() == '(') {
                 dataToCalculate += buttonText;
-                isBracketOpen = false;
+                bracketStack.pop();
             } else {
-                solutionTv.setText("ERR");
+                solutionTv.setText("ERR: Missing opening bracket");
                 return;
             }
         } else {
             dataToCalculate += buttonText;
         }
 
-//        else {
-//            dataToCalculate = dataToCalculate + buttonText;
-//        }
         solutionTv.setText(dataToCalculate);
 
         String finalResult = getResult(dataToCalculate);
