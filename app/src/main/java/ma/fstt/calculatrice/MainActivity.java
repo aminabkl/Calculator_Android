@@ -1,6 +1,8 @@
 package ma.fstt.calculatrice;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,13 +10,21 @@ import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView resultTv, solutionTv;
-    MaterialButton buttonC, buttonBrackOpen, buttonBrackClose;
+    MaterialButton buttonBrackOpen, buttonBrackClose;
     MaterialButton buttonDivide, buttonMultiply, buttonMinus, buttonPlus, buttonEquals;
     MaterialButton button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
     MaterialButton buttonAC, buttonDot;
+
+    boolean isBracketOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resultTv = findViewById(R.id.result_tv);
         solutionTv = findViewById(R.id.solution_tv);
 
-        assignId(buttonC, R.id.button_c);
+
         assignId(buttonBrackOpen, R.id.button_open_bracket);
         assignId(buttonBrackClose, R.id.button_close_bracket);
         assignId(buttonDivide, R.id.button_divide);
@@ -43,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(button9, R.id.button_9);
         assignId(buttonAC, R.id.button_ac);
         assignId(buttonDot, R.id.button_dot);
+
     }
 
     void assignId(MaterialButton btn, int id) {
@@ -60,20 +71,75 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (buttonText.equals("AC")) {
             solutionTv.setText("");
             resultTv.setText("0");
+            isBracketOpen = false;
             return;
         }
 
         if (buttonText.equals("=")) {
-            solutionTv.setText(resultTv.getText());
+            if (isBracketOpen) {
+                solutionTv.setText("ERR: Missing closing bracket");
+                return;
+            }
+            String finalResult = getResult(dataToCalculate);
+            if (!finalResult.equals("ERR")) {
+                solutionTv.setText(finalResult);
+                resultTv.setText(finalResult);
+            } else {
+                solutionTv.setText("ERR");
+            }
             return;
         }
 
-        if (buttonText.equals("=")) {
-            dataToCalculate = dataToCalculate.substring(0, dataToCalculate.length() - 1);
+        if (buttonText.equals("C")) {
+//            dataToCalculate = dataToCalculate.substring(0, dataToCalculate.length() - 1);
+            resultTv.setText("0");
+        }
+
+
+
+        if (buttonText.equals("(")) {
+            dataToCalculate += buttonText;
+            isBracketOpen = true;
+        } else if (buttonText.equals(")")) {
+            if (isBracketOpen) {
+                dataToCalculate += buttonText;
+                isBracketOpen = false;
+            } else {
+                solutionTv.setText("ERR");
+                return;
+            }
         } else {
-            dataToCalculate = dataToCalculate + buttonText;
+            dataToCalculate += buttonText;
         }
+
+//        else {
+//            dataToCalculate = dataToCalculate + buttonText;
+//        }
         solutionTv.setText(dataToCalculate);
 
+        String finalResult = getResult(dataToCalculate);
+
+        if (!finalResult.equals("ERR")) {
+            resultTv.setText(finalResult);
+        }
+
+
+    }
+
+    String getResult(String data) {
+
+        try {
+            Context context = Context.enter();
+            context.setOptimizationLevel(-1);
+            Scriptable scriptable = context.initSafeStandardObjects();
+            String finalResult = context.evaluateString(scriptable, data, "Javascript", 1, null).toString();
+            if (finalResult.endsWith(".0")) {
+                finalResult = finalResult.replace(".0", "");
+            }
+            return finalResult;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERR";
+        }
     }
 }
