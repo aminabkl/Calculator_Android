@@ -23,9 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MaterialButton buttonBrackOpen, buttonBrackClose;
     MaterialButton buttonDivide, buttonMultiply, buttonMinus, buttonPlus, buttonEquals;
     MaterialButton button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
-    MaterialButton buttonAC, buttonDot;
+    MaterialButton buttonAC, buttonC, buttonDot;
 
-    //    boolean isBracketOpen = false;
     Stack<Character> bracketStack;
 
 
@@ -57,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(button8, R.id.button_8);
         assignId(button9, R.id.button_9);
         assignId(buttonAC, R.id.button_ac);
+        assignId(buttonC, R.id.button_c);
         assignId(buttonDot, R.id.button_dot);
 
     }
@@ -77,39 +77,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             solutionTv.setText("");
             resultTv.setText("0");
             bracketStack.clear();
-//            isBracketOpen = false;
             return;
         }
-
-//        if (buttonText.equals("=")) {
-//            if (isBracketOpen) {
-//                solutionTv.setText("ERR: Missing closing bracket");
-//                return;
-//            }
-//            String finalResult = getResult(dataToCalculate);
-//            if (!finalResult.equals("ERR")) {
-//                solutionTv.setText(finalResult);
-//                resultTv.setText(finalResult);
-//            } else {
-//                solutionTv.setText("ERR");
-//            }
-//            return;
-//        }
-//        if (buttonText.equals("(")) {
-//            dataToCalculate += buttonText;
-//            isBracketOpen = true;
-//        } else if (buttonText.equals(")")) {
-//            if (isBracketOpen) {
-//                dataToCalculate += buttonText;
-//                isBracketOpen = false;
-//            } else {
-//                solutionTv.setText("ERR");
-//                return;
-//            }
-//        } else {
-//            dataToCalculate += buttonText;
-//        }
-
 
         if (buttonText.equals("=")) {
             if (!bracketStack.isEmpty()) {
@@ -137,6 +106,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 solutionTv.setText("ERR: Missing opening bracket");
                 return;
+            }
+        } else if (buttonText.equals("C")) {
+            if (!dataToCalculate.isEmpty()) {
+                dataToCalculate = dataToCalculate.substring(0, dataToCalculate.length() - 1);
             }
         } else {
             dataToCalculate += buttonText;
