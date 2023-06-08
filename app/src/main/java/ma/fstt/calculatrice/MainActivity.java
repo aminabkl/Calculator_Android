@@ -161,10 +161,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            historyOperation.clear();
 //            historyOperation.add(operationResult);
 
-            if (!historyOperation.isEmpty()) {
-                historyOperation.set(0, operationResult); // Update the first element with the latest operation
-            } else {
-                historyOperation.add(operationResult);
+            historyOperation.add(0, operationResult); // Add operation to the beginning of the list
+            if (historyOperation.size() > 10) {
+                historyOperation.remove(historyOperation.size() - 1); // Remove the oldest operation if the list exceeds 10
             }
 
 
