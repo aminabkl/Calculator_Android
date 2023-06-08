@@ -1,8 +1,6 @@
 package ma.fstt.calculatrice;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MaterialButton buttonAC, buttonC, buttonDot;
 
     Stack<Character> bracketStack;
-    List<String> historyList;
+    List<String> historyOperation;
+//    List<String> historyOperation;
 
 
     @Override
@@ -39,9 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         solutionTv = findViewById(R.id.solution_tv);
 
         bracketStack = new Stack<>();
-        historyList = new ArrayList<>();
-        Log.d("MainActivity", "History List: " + historyList.toString());
-
+        historyOperation = new ArrayList<>();
+        Log.d("MainActivity", "History Operation List: " + historyOperation.toString());
 
 
         assignId(buttonHistory, R.id.button_history);
@@ -144,13 +142,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Context context = Context.enter();
             context.setOptimizationLevel(-1);
             Scriptable scriptable = context.initSafeStandardObjects();
-//            historyList.add(data);
+//            historyOperation.add(data);
             String finalResult = context.evaluateString(scriptable, data, "Javascript", 1, null).toString();
             if (finalResult.endsWith(".0")) {
                 finalResult = finalResult.replace(".0", "");
             }
-            historyList.clear();
-            historyList.add(data + " = " + finalResult);
+            historyOperation.clear();
+            historyOperation.add(data + " = " + finalResult);
+//            String operationResult = data + " = " + finalResult;
+
+//            for(int i=0 ; i<10 ; i++ ){
+//                if (historyOperation.size() >= 10) {
+//                    historyOperation.remove(0);
+//                }
+//                else{
+//                    historyOperation.add(operationResult);
+//                }
+//            }
+  
             return finalResult;
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     void openHistoryActivity() {
         Intent intent = new Intent(this, HistoryActivity.class);
-        intent.putStringArrayListExtra("historyList", new ArrayList<>(historyList));
+        intent.putStringArrayListExtra("historyOperation", new ArrayList<>(historyOperation));
         startActivity(intent);
     }
 

@@ -15,7 +15,7 @@ import java.util.*;
 public class HistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private List<String> historyList;
+    private List<String> historyOperation;
     private Button backToMainButton;
 
     @Override
@@ -26,11 +26,11 @@ public class HistoryActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        historyList = getIntent().getStringArrayListExtra("historyList");
+        historyOperation = getIntent().getStringArrayListExtra("historyOperation");
 
-        HistoryAdapter adapter = new HistoryAdapter(historyList);
+        HistoryAdapter adapter = new HistoryAdapter(historyOperation);
         recyclerView.setAdapter(adapter);
-        Log.d("HistoryActivity", "History List: " + historyList.toString());
+        Log.d("HistoryActivity", "History Operation List: " + historyOperation.toString());
         backToMainButton = findViewById(R.id.backToMainButton);
         backToMainButton.setOnClickListener(new View.OnClickListener() {
             @Override

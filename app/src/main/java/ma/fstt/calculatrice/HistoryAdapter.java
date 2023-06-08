@@ -13,10 +13,10 @@ import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private List<String> historyList;
+    private List<String> historyOperation;
 
-    public HistoryAdapter(List<String> historyList) {
-        this.historyList = historyList;
+    public HistoryAdapter(List<String> historyOperation) {
+        this.historyOperation = historyOperation;
     }
 
     @NonNull
@@ -28,7 +28,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String operation = historyList.get(position);
+        String operation = historyOperation.get(position);
         holder.operationTextView.setText(operation);
         Log.d("HistoryAdapter", "Operation: " + operation);
 
@@ -36,7 +36,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return historyList.size();
+        return historyOperation.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
