@@ -144,11 +144,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Context context = Context.enter();
             context.setOptimizationLevel(-1);
             Scriptable scriptable = context.initSafeStandardObjects();
-            historyList.add(data);
+//            historyList.add(data);
             String finalResult = context.evaluateString(scriptable, data, "Javascript", 1, null).toString();
             if (finalResult.endsWith(".0")) {
                 finalResult = finalResult.replace(".0", "");
             }
+            
+            historyList.add(data + " = " + finalResult);
             return finalResult;
         } catch (Exception e) {
             e.printStackTrace();
