@@ -16,7 +16,10 @@ public class HistoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private List<String> historyOperation;
+    private HistoryAdapter historyAdapter;
+
     private Button backToMainButton;
+    private Button clearHistoryButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +31,10 @@ public class HistoryActivity extends AppCompatActivity {
 
         historyOperation = getIntent().getStringArrayListExtra("historyOperation");
 
-        HistoryAdapter adapter = new HistoryAdapter(historyOperation);
-        recyclerView.setAdapter(adapter);
+        historyAdapter = new HistoryAdapter(historyOperation);
+        recyclerView.setAdapter(historyAdapter);
         Log.d("HistoryActivity", "History Operation List: " + historyOperation.toString());
+
         backToMainButton = findViewById(R.id.backToMainButton);
         backToMainButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,10 +42,24 @@ public class HistoryActivity extends AppCompatActivity {
                 navigateToMainActivity();
             }
         });
+
+        clearHistoryButton = findViewById(R.id.clearHistoryButton);
+        clearHistoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearHistory();
+            }
+        });
     }
+
     private void navigateToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void clearHistory() {
+        historyOperation.clear();
+        historyAdapter.notifyDataSetChanged();
     }
 }

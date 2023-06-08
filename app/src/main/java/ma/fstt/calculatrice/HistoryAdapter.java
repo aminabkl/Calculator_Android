@@ -25,14 +25,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history, parent, false);
         return new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String operation = historyOperation.get(position);
         holder.operationTextView.setText(operation);
         Log.d("HistoryAdapter", "Operation: " + operation);
-
     }
+
 
     @Override
     public int getItemCount() {
