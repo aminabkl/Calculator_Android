@@ -173,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putStringArrayListExtra("historyOperation", new ArrayList<>(historyOperation));
         startActivity(intent);
     }
+
+    // Persist history until emulator is off
     @Override
     protected void onResume() {
         super.onResume();
