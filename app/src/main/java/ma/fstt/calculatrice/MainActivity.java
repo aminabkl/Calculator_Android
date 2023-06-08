@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (finalResult.endsWith(".0")) {
                 finalResult = finalResult.replace(".0", "");
             }
-            
+            historyList.clear();
             historyList.add(data + " = " + finalResult);
             return finalResult;
         } catch (Exception e) {
