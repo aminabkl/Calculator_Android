@@ -42,12 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bracketStack = new Stack<>();
         historyOperation = new ArrayList<>();
 
-        historyOperation.add("one");
-        historyOperation.add("two");
-        historyOperation.add("three");
-        historyOperation.add("four");
-        historyOperation.add("five");
-        historyOperation.add("six");
         Log.d("MainActivity", "History Operation List: " + historyOperation.toString());
 
 
@@ -164,8 +158,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finalResult = finalResult.replace(".0", "");
             }
             String operationResult = data + " = " + finalResult;
-            historyOperation.clear();
-            historyOperation.add(operationResult);
+//            historyOperation.clear();
+//            historyOperation.add(operationResult);
+
+            if (!historyOperation.isEmpty()) {
+                historyOperation.set(0, operationResult); // Update the first element with the latest operation
+            } else {
+                historyOperation.add(operationResult);
+            }
 
 
             return finalResult;
@@ -182,36 +182,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // Persist history until emulator is off
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        loadHistoryList();
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        saveHistoryList();
-//    }
-//
-//    private void saveHistoryList() {
-//        SharedPreferences preferences = getSharedPreferences("CalcHistory", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = preferences.edit();
-//        editor.putInt("HistorySize", historyOperation.size());
-//        for (int i = 0; i < historyOperation.size(); i++) {
-//            editor.putString("History_" + i, historyOperation.get(i));
-//        }
-//        editor.apply();
-//    }
-//
-//    private void loadHistoryList() {
-//        SharedPreferences preferences = getSharedPreferences("CalcHistory", MODE_PRIVATE);
-//        int historySize = preferences.getInt("HistorySize", 0);
-//        historyOperation.clear();
-//        for (int i = 0; i < historySize; i++) {
-//            String history = preferences.getString("History_" + i, "");
-//            historyOperation.add(history);
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadHistoryList();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveHistoryList();
+    }
+
+    private void saveHistoryList() {
+        SharedPreferences preferences = getSharedPreferences("CalcHistory", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("HistorySize", historyOperation.size());
+        for (int i = 0; i < historyOperation.size(); i++) {
+            editor.putString("History_" + i, historyOperation.get(i));
+        }
+        editor.apply();
+    }
+
+    private void loadHistoryList() {
+        SharedPreferences preferences = getSharedPreferences("CalcHistory", MODE_PRIVATE);
+        int historySize = preferences.getInt("HistorySize", 0);
+        historyOperation.clear();
+        for (int i = 0; i < historySize; i++) {
+            String history = preferences.getString("History_" + i, "");
+            historyOperation.add(history);
+        }
+    }
 
 }
