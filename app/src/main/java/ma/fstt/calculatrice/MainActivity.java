@@ -3,6 +3,7 @@ package ma.fstt.calculatrice;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    historyOperation.add(operationResult);
 //                }
 //            }
-  
+
             return finalResult;
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,6 +172,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(this, HistoryActivity.class);
         intent.putStringArrayListExtra("historyOperation", new ArrayList<>(historyOperation));
         startActivity(intent);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadHistoryList();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveHistoryList();
+    }
+    private void saveHistoryList() {
+        SharedPreferences preferences = getSharedPreferences("CalcHistory", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("HistorySize", historyOperation.size());
+        for (int i = 0; i < historyOperation.size(); i++) {
+            editor.putString("History_" + i, historyOperation.get(i));
+        }
+        editor.apply();
+    }
+
+    private void loadHistoryList() {
+        SharedPreferences preferences = getSharedPreferences("CalcHistory", MODE_PRIVATE);
+        int historySize = preferences.getInt("HistorySize", 0);
+        historyOperation.clear();
+        for (int i = 0; i < historySize; i++) {
+            String history = preferences.getString("History_" + i, "");
+            historyOperation.add(history);
+        }
     }
 
 }
