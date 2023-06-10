@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -184,10 +185,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void openHistoryActivity() {
+        List<String> historyOperation = fetchHistoryFromDatabase();
+
         Intent intent = new Intent(this, HistoryActivity.class);
         intent.putStringArrayListExtra("historyOperation", new ArrayList<>(historyOperation));
         startActivity(intent);
     }
+
+    private List<String> fetchHistoryFromDatabase() {
+        List<String> historyOperation = new ArrayList<>();
+
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        String[] columns = {DatabaseHelper.COLUMN_OPERATION};
+        Cursor cursor = db.query(DatabaseHelper.TABLE_NAME, columns, null, null, null, null, null);
+
+        int columnIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_OPERATION);
+        if (columnIndex != -1) {
+            while (cursor.moveToNext()) {
+                String operation = cursor.getString(columnIndex);
+                historyOperation.add(operation);
+            }
+        }
+
+        cursor.close();
+        db.close();
+
+        return historyOperation;
+    }
+
 
     // Persist history until emulator is off
     @Override
