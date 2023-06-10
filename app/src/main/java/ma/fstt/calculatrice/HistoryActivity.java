@@ -71,14 +71,14 @@ public class HistoryActivity extends AppCompatActivity {
     private void clearHistoryRecords() {
         SharedPreferences preferences = getSharedPreferences("CalcHistory", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.clear(); // Supprime tous les enregistrements de préférences partagées
+        editor.clear();
         editor.apply();
     }
 
     private void clearDatabaseRecords() {
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        db.delete(DatabaseHelper.TABLE_NAME, null, null); // Delete all rows from the database table
+        db.delete(DatabaseHelper.TABLE_NAME, null, null)
         db.close();
     }
 
