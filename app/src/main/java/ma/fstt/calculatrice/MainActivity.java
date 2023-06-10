@@ -2,8 +2,10 @@ package ma.fstt.calculatrice;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Stack<Character> bracketStack;
     List<String> historyOperation;
-//    List<String> historyOperation;
+
+    private DatabaseHelper databaseHelper;
 
 
     @Override
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         bracketStack = new Stack<>();
         historyOperation = new ArrayList<>();
+        databaseHelper = new DatabaseHelper(this);
 
         Log.d("MainActivity", "History Operation List: " + historyOperation.toString());
 
@@ -104,29 +108,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!finalResult.equals("ERR")) {
                 solutionTv.setText(finalResult);
                 resultTv.setText(finalResult);
-//                historyOperation.clear(); // Effacer l'historique existant
-                historyOperation.add(finalResult); // Ajouter le résultat final à l'historique
+                saveOperationToHistory(dataToCalculate, finalResult);
             } else {
                 solutionTv.setText("ERR");
             }
             return;
         }
-
-//        if (buttonText.equals("=")) {
-//            if (!bracketStack.isEmpty()) {
-//                solutionTv.setText("ERR: Missing closing bracket");
-//                return;
-//            }
-//
-//            String finalResult = getResult(dataToCalculate);
-//            if (!finalResult.equals("ERR")) {
-//                solutionTv.setText(finalResult);
-//                resultTv.setText(finalResult);
-//            } else {
-//                solutionTv.setText("ERR");
-//            }
-//            return;
-//        }
 
         if (buttonText.equals("(")) {
             dataToCalculate += buttonText;
@@ -177,20 +164,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finalResult = finalResult.replace(".0", "");
             }
             String operationResult = data + " = " + finalResult;
-//            historyOperation.clear();
-//            historyOperation.add(operationResult);
-
-            historyOperation.add(0, operationResult); // Add operation to the beginning of the list
-            if (historyOperation.size() > 10) {
-                historyOperation.remove(historyOperation.size() - 1); // Remove the oldest operation if the list exceeds 10
-            }
-
+            historyOperation.clear();
+            historyOperation.add(operationResult);
 
             return finalResult;
         } catch (Exception e) {
             e.printStackTrace();
             return "ERR";
         }
+    }
+
+    private void saveOperationToHistory(String operation, String result) {
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COLUMN_OPERATION, operation + " = " + result);
+        db.insert(DatabaseHelper.TABLE_NAME, null, values);
+        db.close();
+        Log.d("onSave", "table saved");
     }
 
     void openHistoryActivity() {
