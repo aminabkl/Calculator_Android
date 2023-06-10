@@ -1,6 +1,7 @@
 package ma.fstt.calculatrice;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -64,6 +65,7 @@ public class HistoryActivity extends AppCompatActivity {
         historyOperation.clear();
         historyAdapter.notifyDataSetChanged();
         clearHistoryRecords();
+        clearDatabaseRecords();
     }
 
     private void clearHistoryRecords() {
@@ -71,6 +73,13 @@ public class HistoryActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear(); // Supprime tous les enregistrements de préférences partagées
         editor.apply();
+    }
+
+    private void clearDatabaseRecords() {
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        db.delete(DatabaseHelper.TABLE_NAME, null, null); // Delete all rows from the database table
+        db.close();
     }
 
 }

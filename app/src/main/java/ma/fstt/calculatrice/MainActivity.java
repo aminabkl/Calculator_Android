@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -142,18 +143,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!finalResult.equals("ERR")) {
             resultTv.setText(finalResult);
         }
-
-
     }
 
     String getResult(String data) {
-
         try {
             Context context = Context.enter();
             context.setOptimizationLevel(-1);
             Scriptable scriptable = context.initSafeStandardObjects();
             String finalResult = context.evaluateString(scriptable, data, "Javascript", 1, null).toString();
-
 
             // Round the result to 5 decimal places
             double result = Double.parseDouble(finalResult);
@@ -177,6 +174,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void saveOperationToHistory(String operation, String result) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+        // Get the current number of operations in the table
+        long rowCount = DatabaseUtils.queryNumEntries(db, DatabaseHelper.TABLE_NAME);
+
+        // If the number of operations exceeds 10, delete the oldest operation
+        if (rowCount >= 10) {
+            String oldestOperationId = "SELECT " + DatabaseHelper.COLUMN_ID +
+                    " FROM " + DatabaseHelper.TABLE_NAME +
+                    " ORDER BY " + DatabaseHelper.COLUMN_ID +
+                    " ASC LIMIT 1";
+            db.execSQL("DELETE FROM " + DatabaseHelper.TABLE_NAME +
+                    " WHERE " + DatabaseHelper.COLUMN_ID +
+                    " IN (" + oldestOperationId + ")");
+        }
+
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_OPERATION, operation + " = " + result);
         db.insert(DatabaseHelper.TABLE_NAME, null, values);
@@ -184,9 +196,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("onSave", "table saved");
     }
 
+
     void openHistoryActivity() {
         List<String> historyOperation = fetchHistoryFromDatabase();
-
         Intent intent = new Intent(this, HistoryActivity.class);
         intent.putStringArrayListExtra("historyOperation", new ArrayList<>(historyOperation));
         startActivity(intent);
@@ -194,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<String> fetchHistoryFromDatabase() {
         List<String> historyOperation = new ArrayList<>();
-
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         String[] columns = {DatabaseHelper.COLUMN_OPERATION};
         Cursor cursor = db.query(DatabaseHelper.TABLE_NAME, columns, null, null, null, null, null);
@@ -206,10 +217,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 historyOperation.add(operation);
             }
         }
-
         cursor.close();
         db.close();
-
         return historyOperation;
     }
 
