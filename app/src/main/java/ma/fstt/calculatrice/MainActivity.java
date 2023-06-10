@@ -161,6 +161,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (finalResult.endsWith(".0")) {
                 finalResult = finalResult.replace(".0", "");
             }
+
+            // Handle devision by zero
+            if (Double.isInfinite(result)) {
+                finalResult = "ERR: Division by zero";
+            }
+
             String operationResult = data + " = " + finalResult;
             historyOperation.clear();
             historyOperation.add(operationResult);
