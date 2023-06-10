@@ -78,7 +78,7 @@ public class HistoryActivity extends AppCompatActivity {
     private void clearDatabaseRecords() {
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        db.delete(DatabaseHelper.TABLE_NAME, null, null)
+        db.delete(DatabaseHelper.TABLE_NAME, null, null);
         db.close();
     }
 
