@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Calculatrice</string>
+    <string name="historique_description">Icône historique</string>
+
 </resources>

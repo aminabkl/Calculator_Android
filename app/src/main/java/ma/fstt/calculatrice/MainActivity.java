@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+
         if (buttonText.equals("=")) {
             if (!bracketStack.isEmpty()) {
                 solutionTv.setText("ERR: Missing closing bracket");
@@ -103,11 +104,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!finalResult.equals("ERR")) {
                 solutionTv.setText(finalResult);
                 resultTv.setText(finalResult);
+//                historyOperation.clear(); // Effacer l'historique existant
+                historyOperation.add(finalResult); // Ajouter le résultat final à l'historique
             } else {
                 solutionTv.setText("ERR");
             }
             return;
         }
+
+//        if (buttonText.equals("=")) {
+//            if (!bracketStack.isEmpty()) {
+//                solutionTv.setText("ERR: Missing closing bracket");
+//                return;
+//            }
+//
+//            String finalResult = getResult(dataToCalculate);
+//            if (!finalResult.equals("ERR")) {
+//                solutionTv.setText(finalResult);
+//                resultTv.setText(finalResult);
+//            } else {
+//                solutionTv.setText("ERR");
+//            }
+//            return;
+//        }
 
         if (buttonText.equals("(")) {
             dataToCalculate += buttonText;

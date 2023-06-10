@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.*;
+import android.content.SharedPreferences;
+
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -61,5 +63,14 @@ public class HistoryActivity extends AppCompatActivity {
     private void clearHistory() {
         historyOperation.clear();
         historyAdapter.notifyDataSetChanged();
+        clearHistoryRecords();
     }
+
+    private void clearHistoryRecords() {
+        SharedPreferences preferences = getSharedPreferences("CalcHistory", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear(); // Supprime tous les enregistrements de préférences partagées
+        editor.apply();
+    }
+
 }
