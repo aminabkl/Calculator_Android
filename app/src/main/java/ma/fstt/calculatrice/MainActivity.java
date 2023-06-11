@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 solutionTv.setText("ERR: Missing opening bracket");
                 return;
             }
-        } else if (buttonText.equals("C")) {
+        } else if (buttonText.equals("DEL")) {
             if (!dataToCalculate.isEmpty()) {
                 dataToCalculate = dataToCalculate.substring(0, dataToCalculate.length() - 1);
             }

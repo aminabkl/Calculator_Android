@@ -8,15 +8,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp"
+        >
 
         <TextView
             android:id="@+id/operationTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:background="#D8CACA"
-            android:textSize="16sp"
+            android:background="#ECECEC"
+            android:textSize="35sp"
             android:maxLines="1"
             android:ellipsize="end" />
 

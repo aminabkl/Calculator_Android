@@ -16,13 +16,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Back to Main" />
+        android:text="Back to Main"
+        android:textSize="24sp"
+        android:textAllCaps="true"
+        />
 
     <Button
         android:id="@+id/clearHistoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Clear History" />
+        android:text="Clear History"
+        android:textSize="24sp"
+        android:textAllCaps="true" />
 
 </LinearLayout>
